@@ -1,3 +1,10 @@
+/*
+To Add:
+- total tabs (in window)
+- organize all
+- delete all (by group, or just delete google searches)
+*/
+
 document.addEventListener('DOMContentLoaded', () => {
   function deleteTab(tabId) {
     chrome.tabs.remove(tabId);
