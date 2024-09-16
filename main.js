@@ -3,6 +3,7 @@ To Add:
 - total tabs (in window)
 - organize all
 - delete all (by group, or just delete google searches)
+- add search function for tab titles
 */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -49,9 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Organize Tabs
-    // chrome.tabs.move(tabId, { index: i })
-    // sort tabs array by url alphabetical order
-    // iterate through array and set each tab to index of i
     function organizeTabs() {
       tabs.sort((tab1, tab2) => {
         if (tab1.url < tab2.url) return -1;

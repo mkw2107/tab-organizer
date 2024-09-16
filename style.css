@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   display: flex;
   flex-direction: column;
@@ -8,6 +12,19 @@ body {
   background-color: #2b2b2b;
   color: #f2f2f2;
   font-size: 14px;
+}
+
+h3 {
+  margin: 5px 0px 5px 20px;
+  align-self: flex-start;
+}
+
+input {
+  width: 97%;
+}
+
+ol {
+  margin: 0px 10px 0px 0px;
 }
 
 li {
@@ -21,9 +38,14 @@ ol li::marker {
   font-size: 1.2em;
 }
 
+button {
+  border: none;
+  padding: 3px;
+}
+
 li button {
   width: 50%;
-  border: none;
+  /* border: none; */
 }
 
 .button-container {
@@ -34,15 +56,19 @@ li button {
 .delete-tab {
   background-color: #a83636;
   color: #f2f2f2;
+  border-radius: 0px 15px 15px 0px;
 }
 
-/* .switch-tab {
-} */
+.switch-tab {
+  border-radius: 15px 0px 0px 15px;
+}
 
 #organize {
   width: 40%;
   margin: 10px;
   font-weight: bold;
+  padding: 7px;
+  border-radius: 10px;
 }
 
 #close-all {
@@ -51,6 +77,8 @@ li button {
   background-color: #a83636;
   color: #f2f2f2;
   font-weight: bold;
+  padding: 7px;
+  border-radius: 10px;
 }
 
 #main-button-container {
@@ -58,4 +86,12 @@ li button {
   justify-content: center;
   align-items: center;
   width: 100%;
+}
+
+#search-container {
+  align-self: flex-start;
+  /* margin-top: 10px;
+  margin-left: 20px; */
+  margin: 10px 0px 10px 20px;
+  width: 90%;
 }
