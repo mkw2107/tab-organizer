@@ -49,15 +49,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Organize Tabs
-    //
+    // chrome.tabs.move(tabId, { index: i })
+    // sort tabs array by url alphabetical order
+    // iterate through array and set each tab to index of i
+    function organizeTabs() {
+      tabs.sort((tab1, tab2) => {
+        if (tab1.url < tab2.url) return -1;
+        if (tab2.url < tab1.url) return 1;
+        else return 0;
+      });
+      for (let i = 0; i < tabs.length; i++) {
+        chrome.tabs.move(tabs[i].id, { index: i });
+      }
+    }
+    let organizeButton = document.getElementById('organize');
+    organizeButton.addEventListener('click', organizeTabs);
 
     // Close All Tabs
-    let closeAllButton = document.getElementById('close-all');
-    closeAllButton.addEventListener('click', () => {
+    function closeAll() {
       chrome.tabs.create({});
       for (let i = 0; i < tabs.length; i++) {
         deleteTab(tabs[i].id);
       }
-    });
+    }
+    let closeAllButton = document.getElementById('close-all');
+    closeAllButton.addEventListener('click', closeAll);
   });
 });
