@@ -1,12 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('testing');
+  function deleteTab(tabId) {
+    chrome.tabs.remove(tabId);
+  }
   chrome.tabs.query({ windowId: chrome.windows.WINDOW_ID_CURRENT }, (tabs) => {
     console.log(tabs);
-    // document.querySelector('body').innerHTML = `tabs: ${tabs[0].title}`;
-    // console.log(tabs);
-    function deleteTab(tabId) {
-      chrome.tabs.remove(tabId);
-    }
 
     // iterate over array of tabs
     // for each tab
@@ -32,5 +29,15 @@ document.addEventListener('DOMContentLoaded', () => {
       listItem.appendChild(button);
       tabListElement.appendChild(listItem);
     }
+
+    let closeAllButton = document.getElementById('close-all');
+    closeAllButton.addEventListener('click', () => {
+      // open new tab
+      // close all other tabs
+      chrome.tabs.create({});
+      for (let i = 0; i < tabs.length; i++) {
+        deleteTab(tabs[i].id);
+      }
+    });
   });
 });
