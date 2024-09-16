@@ -2,6 +2,11 @@ document.addEventListener('DOMContentLoaded', () => {
   function deleteTab(tabId) {
     chrome.tabs.remove(tabId);
   }
+
+  function switchTab(tabId) {
+    chrome.tabs.update(tabId, { active: true });
+  }
+
   chrome.tabs.query({ windowId: chrome.windows.WINDOW_ID_CURRENT }, (tabs) => {
     console.log(tabs);
 
@@ -25,6 +30,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const switchButton = document.createElement('button');
       switchButton.innerHTML = 'Switch to';
+      switchButton.addEventListener('click', () => {
+        switchTab(tabs[i].id);
+      });
       switchButton.classList.add('switch-tab');
 
       listItem.appendChild(buttonContainer);
@@ -32,6 +40,9 @@ document.addEventListener('DOMContentLoaded', () => {
       buttonContainer.appendChild(deleteButton);
       tabListElement.appendChild(listItem);
     }
+
+    // Organize Tabs
+    //
 
     // Close All Tabs
     let closeAllButton = document.getElementById('close-all');
