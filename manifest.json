@@ -1,0 +1,16 @@
+{
+  "name": "Tab Organizer",
+  "version": "1.0.0",
+  "description": "Organizes tabs and can close tabs.",
+  "manifest_version": 3,
+  "background": {
+    "service_worker": "main.js"
+  },
+  "author": "Anna",
+  "action": {
+    "default_popup": "index.html",
+    "default_title": "Tab Organizer"
+  },
+  "permissions": ["scripting", "tabs", "notifications"],
+  "icons": {}
+}

@@ -1,0 +1,45 @@
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 260px;
+  background-color: #2b2b2b;
+  color: #f2f2f2;
+  font-size: 14px;
+}
+
+li {
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+ol li::marker {
+  font-weight: bold;
+  color: #ffbdbd;
+  font-size: 1.2em;
+}
+
+li button {
+  width: 100%;
+}
+
+#organize {
+  width: 40%;
+  margin: 10px;
+}
+
+#close-all {
+  width: 40%;
+  margin: 10px;
+  background-color: #a83636;
+  color: #f2f2f2;
+}
+
+#button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
