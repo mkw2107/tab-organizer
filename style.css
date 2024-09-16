@@ -22,10 +22,22 @@ ol li::marker {
 }
 
 li button {
-  width: 100%;
+  width: 50%;
+  border: none;
+}
+
+.button-container {
+  display: flex;
+  justify-content: left;
+}
+
+.delete-tab {
   background-color: #a83636;
   color: #f2f2f2;
 }
+
+/* .switch-tab {
+} */
 
 #organize {
   width: 40%;
@@ -41,7 +53,7 @@ li button {
   font-weight: bold;
 }
 
-#button-container {
+#main-button-container {
   display: flex;
   justify-content: center;
   align-items: center;
