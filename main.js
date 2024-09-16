@@ -100,6 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
       for (let i = 0; i < searchedTabs.length; i++) {
         deleteTab(searchedTabs[i].id);
       }
+      window.location.reload();
     }
     deleteSearchButton.addEventListener('click', deleteSearchResults);
 
