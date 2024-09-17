@@ -47,6 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
       deleteButton.innerHTML = 'Delete Tab';
       deleteButton.addEventListener('click', async () => {
         await deleteTab(tab.id);
+
         clearList();
         chrome.tabs.query(
           { windowId: chrome.windows.WINDOW_ID_CURRENT },
@@ -95,7 +96,8 @@ document.addEventListener('DOMContentLoaded', () => {
       for (let i = 0; i < tabs.length; i++) {
         chrome.tabs.move(tabs[i].id, { index: i });
       }
-      window.location.reload();
+      clearList();
+      addAllTabs(tabs);
     }
     let organizeButton = document.getElementById('organize');
     organizeButton.addEventListener('click', organizeTabs);
@@ -114,11 +116,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const deleteSearchButton = document.createElement('button');
     deleteSearchButton.innerHTML = 'Delete Searched Tabs';
     const searchContainer = document.getElementById('search-container');
-    function deleteSearchResults() {
+    async function deleteSearchResults() {
+      const deletedTabs = [];
       for (let i = 0; i < searchedTabs.length; i++) {
-        deleteTab(searchedTabs[i].id);
+        deletedTabs.push(deleteTab(searchedTabs[i].id));
       }
-      window.location.reload();
+      await Promise.all(deletedTabs);
+      searchInput.value = '';
+      clearList();
+      chrome.tabs.query(
+        { windowId: chrome.windows.WINDOW_ID_CURRENT },
+        (tabs) => {
+          addAllTabs(tabs);
+        }
+      );
     }
     deleteSearchButton.addEventListener('click', deleteSearchResults);
 
