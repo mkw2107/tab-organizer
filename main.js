@@ -11,10 +11,19 @@ To Add:
 document.addEventListener('DOMContentLoaded', () => {
   // query the current window's tabs, and do things with the tabs
   chrome.tabs.query({ windowId: chrome.windows.WINDOW_ID_CURRENT }, (tabs) => {
+    // delete one tab
+    // chrome.tabs.remove is asynchronous but doesn't return a promise, so is hard to use reliably.
+    // so I made it a Promise
     function deleteTab(tabId) {
-      chrome.tabs.remove(tabId);
+      return new Promise((resolve, reject) => {
+        chrome.tabs.remove(tabId, () => {
+          if (chrome.runtime.lastError) return reject(chrome.runtime.lastError);
+          resolve();
+        });
+      });
     }
 
+    // switch active tab to specific tab
     function switchTab(tabId) {
       chrome.tabs.update(tabId, { active: true });
     }
@@ -36,9 +45,15 @@ document.addEventListener('DOMContentLoaded', () => {
       // make delete button
       const deleteButton = document.createElement('button');
       deleteButton.innerHTML = 'Delete Tab';
-      deleteButton.addEventListener('click', () => {
-        deleteTab(tab.id);
-        window.location.reload();
+      deleteButton.addEventListener('click', async () => {
+        await deleteTab(tab.id);
+        clearList();
+        chrome.tabs.query(
+          { windowId: chrome.windows.WINDOW_ID_CURRENT },
+          (tabs) => {
+            addAllTabs(tabs);
+          }
+        );
       });
       deleteButton.classList.add('delete-tab');
 
@@ -59,13 +74,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function clearList() {
       tabListElement.innerHTML = '';
-      searchedTabs = [];
     }
 
     // add tab title to list, and add delete and switch buttons
-    for (let i = 0; i < tabs.length; i++) {
-      addTabToList(tabs[i]);
+    function addAllTabs(tabs) {
+      for (let i = 0; i < tabs.length; i++) {
+        addTabToList(tabs[i]);
+      }
     }
+
+    addAllTabs(tabs);
 
     // Organize Tabs
     function organizeTabs() {
@@ -107,6 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Search input
     function searchTabs(input) {
       clearList();
+      searchedTabs = [];
 
       for (let i = 0; i < tabs.length; i++) {
         if (tabs[i].url.includes(input) || tabs[i].title.includes(input)) {

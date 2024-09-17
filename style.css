@@ -34,7 +34,8 @@ li {
 
 ol li::marker {
   font-weight: bold;
-  color: #ffbdbd;
+  color: #ff7474b4;
+  /* color: #ffbdbd; */
   font-size: 1.2em;
 }
 
