@@ -115,6 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Delete Searched Tabs
     const deleteSearchButton = document.createElement('button');
     deleteSearchButton.innerHTML = 'Delete Searched Tabs';
+    deleteSearchButton.id = 'delete-search';
     const searchContainer = document.getElementById('search-container');
     async function deleteSearchResults() {
       const deletedTabs = [];
