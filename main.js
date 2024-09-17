@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   // query the current window's tabs, and do things with the tabs
   chrome.tabs.query({ windowId: chrome.windows.WINDOW_ID_CURRENT }, (tabs) => {
-    console.log(tabs);
     // delete one tab
     // chrome.tabs.remove is asynchronous but doesn't return a promise, so is hard to use reliably.
     // so I made it a Promise

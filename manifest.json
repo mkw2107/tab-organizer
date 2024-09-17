@@ -12,5 +12,7 @@
     "default_title": "Tab Organizer"
   },
   "permissions": ["scripting", "tabs", "notifications"],
-  "icons": {}
+  "icons": {
+    "16": "icon.png"
+  }
 }
