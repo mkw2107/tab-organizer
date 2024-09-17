@@ -115,3 +115,11 @@ li button {
   margin-top: 15px;
   width: 100%;
 }
+
+#domain-sort {
+  /* width: 40%; */
+  margin: 10px;
+  font-weight: bold;
+  padding: 7px;
+  border-radius: 10px;
+}

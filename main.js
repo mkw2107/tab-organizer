@@ -165,6 +165,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // then, for all keys in object, create a header with the innerhtml of domain name
     // call addAllTabs passing in tab id array
     function sortByDomain() {
+      domainSort = true;
+      domainSortButton.innerHTML = 'Sort Tab List in Window Order';
       clearList();
 
       const domains = [];
@@ -182,15 +184,26 @@ document.addEventListener('DOMContentLoaded', () => {
       for (let domain in tabsByDomain) {
         let domainHeader = document.createElement('h4');
         domainHeader.innerHTML = domain;
-        domainHeader.classList.add('domain-name')
+        domainHeader.classList.add('domain-name');
         tabListElement.appendChild(domainHeader);
         addAllTabs(tabsByDomain[domain]);
       }
     }
+    function swapDomainSort() {
+      if (!domainSort) sortByDomain();
+      else {
+        domainSort = false;
+        domainSortButton.innerHTML = 'Sort Tab List by Domain';
+        clearList();
+        addAllTabs(tabs);
+      }
+    }
     // create button to sort all by domain
+    let domainSort = false;
     const domainSortButton = document.createElement('button');
+    domainSortButton.id = 'domain-sort';
     domainSortButton.innerHTML = 'Sort Tab List by Domain';
-    domainSortButton.addEventListener('click', sortByDomain);
+    domainSortButton.addEventListener('click', swapDomainSort);
     document
       .getElementById('main-button-container')
       .insertAdjacentElement('afterend', domainSortButton);
