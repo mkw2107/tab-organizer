@@ -27,6 +27,8 @@ input {
 ol {
   margin: 0px 10px 0px 0px;
   width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 li {
@@ -64,6 +66,13 @@ li button {
 
 .switch-tab {
   border-radius: 15px 0px 0px 15px;
+}
+
+.domain-name {
+  /* background-color: aqua; */
+  text-align: center;
+  border-style: solid;
+  padding: 5px;
 }
 
 #organize {

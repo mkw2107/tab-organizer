@@ -148,5 +148,51 @@ document.addEventListener('DOMContentLoaded', () => {
     searchInput.addEventListener('input', (e) => {
       searchTabs(e.target.value);
     });
+
+    // sort tabs by domain
+    function getDomain(url) {
+      const hostname = new URL(url).hostname;
+      // if (hostname.startsWith('www.')) return hostname.slice(4);
+      // else return hostname;
+      return hostname.startsWith('www.') ? hostname.slice(4) : hostname;
+    }
+    // function that gets all domains (and tab ids associated with it), puts them in an array, sorts them
+    // remember to clearList()
+    // each domain will be pushed to array of domains, then add a key with the domain name to an object with the value being an array where i will push each tab id with the domain
+    // check if domain exists in array. if not, push domain to array, and add new key of domain name to object with value of [tab.id]
+    // if it does exist, push tab.id to array of key domain name in object
+    // will then have object with all tab ids per domain
+    // then, for all keys in object, create a header with the innerhtml of domain name
+    // call addAllTabs passing in tab id array
+    function sortByDomain() {
+      clearList();
+
+      const domains = [];
+      const tabsByDomain = {};
+
+      for (let i = 0; i < tabs.length; i++) {
+        const hostname = getDomain(tabs[i].url);
+        if (domains.includes(hostname)) tabsByDomain[hostname].push(tabs[i]);
+        else {
+          domains.push(hostname);
+          tabsByDomain[hostname] = [tabs[i]];
+        }
+      }
+
+      for (let domain in tabsByDomain) {
+        let domainHeader = document.createElement('h4');
+        domainHeader.innerHTML = domain;
+        domainHeader.classList.add('domain-name')
+        tabListElement.appendChild(domainHeader);
+        addAllTabs(tabsByDomain[domain]);
+      }
+    }
+    // create button to sort all by domain
+    const domainSortButton = document.createElement('button');
+    domainSortButton.innerHTML = 'Sort Tab List by Domain';
+    domainSortButton.addEventListener('click', sortByDomain);
+    document
+      .getElementById('main-button-container')
+      .insertAdjacentElement('afterend', domainSortButton);
   });
 });
