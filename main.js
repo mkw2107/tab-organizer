@@ -1,16 +1,7 @@
-/*
-To Add:
-- total tabs (in window)
-- delete all (by group, or just delete google searches)
-*/
-
-// add delete button for search results
-// when search bar has anything other than an empty string, have a delete results button available
-// delete search results button should delete only the tabs that are in the list
-
 document.addEventListener('DOMContentLoaded', () => {
   // query the current window's tabs, and do things with the tabs
   chrome.tabs.query({ windowId: chrome.windows.WINDOW_ID_CURRENT }, (tabs) => {
+    console.log(tabs);
     // delete one tab
     // chrome.tabs.remove is asynchronous but doesn't return a promise, so is hard to use reliably.
     // so I made it a Promise
