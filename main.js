@@ -1,10 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
   // query the current window's tabs, and do things with the tabs
   chrome.tabs.query({ windowId: chrome.windows.WINDOW_ID_CURRENT }, (tabs) => {
+    console.log(tabs);
+    console.log(chrome.storage);
     // delete one tab
     // chrome.tabs.remove is asynchronous but doesn't return a promise, so is hard to use reliably.
     // so I made it a Promise
     function deleteTab(tabId) {
+      if (favorites[tabId]) return;
       return new Promise((resolve, reject) => {
         chrome.tabs.remove(tabId, () => {
           if (chrome.runtime.lastError) return reject(chrome.runtime.lastError);
@@ -21,6 +24,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // variables
     const tabListElement = document.getElementById('tab-list');
     let searchedTabs = [];
+    let favorites = {};
+    // chrome.storage.local.get({ favorites: {} }, (result) => {
+    //   favorites = result.favorites;
+    // });
 
     // Creating/maintaing tab list
     function addTabToList(tab) {
@@ -31,6 +38,24 @@ document.addEventListener('DOMContentLoaded', () => {
       // make container for switch and delete buttons
       const buttonContainer = document.createElement('div');
       buttonContainer.classList.add('button-container');
+
+      // favorite
+      const heartIcon = document.createElement('img');
+      if (favorites[tab.id]) heartIcon.src = './heart-filled.png';
+      else heartIcon.src = './heart.png';
+      heartIcon.id = 'heart-icon';
+      heartIcon.addEventListener('click', () => {
+        // change heart icon on click
+        if (heartIcon.src.includes('heart.png')) {
+          heartIcon.src = './heart-filled.png';
+          favorites[tab.id] = true;
+        } else {
+          heartIcon.src = './heart.png';
+          delete favorites[tab.id];
+        }
+        // chrome.storage.local.set({ favorites: favorites });
+        // add tab to favorite object. when pressing delete, check if tab exists in object. if so, don't delete (just return);
+      });
 
       // make delete button
       const deleteButton = document.createElement('button');
@@ -60,6 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
       listItem.appendChild(buttonContainer);
       buttonContainer.appendChild(switchButton);
       buttonContainer.appendChild(deleteButton);
+      switchButton.insertAdjacentElement('beforebegin', heartIcon);
       tabListElement.appendChild(listItem);
     }
 
@@ -94,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Close All Tabs
     function closeAll() {
-      chrome.tabs.create({});
+      if (Object.keys(favorites).length === 0) chrome.tabs.create({});
       for (let i = 0; i < tabs.length; i++) {
         deleteTab(tabs[i].id);
       }
