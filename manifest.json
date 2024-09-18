@@ -11,6 +11,6 @@
     "default_popup": "index.html",
     "default_title": "Tab Organizer"
   },
-  "permissions": ["scripting", "tabs", "notifications"],
+  "permissions": ["scripting", "tabs", "notifications", "storage"],
   "icons": {}
 }
