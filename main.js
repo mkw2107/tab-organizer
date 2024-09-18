@@ -1,14 +1,6 @@
-console.log('hello testing');
-chrome.runtime.onInstalled.addListener(() => {
-  console.log('Extension installed');
-});
-
 document.addEventListener('DOMContentLoaded', () => {
   // query the current window's tabs, and do things with the tabs
   chrome.tabs.query({ windowId: chrome.windows.WINDOW_ID_CURRENT }, (tabs) => {
-    console.log('Checking chrome.storage:', chrome.storage);
-    console.log(chrome.storage.local);
-
     // delete one tab
     // chrome.tabs.remove is asynchronous but doesn't return a promise, so is hard to use reliably.
     // so I made it a Promise
@@ -60,12 +52,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // favorite
       const heartIcon = document.createElement('img');
-      console.log('is tab id in favorites?', favorites[tab.id]);
       if (favorites[tab.id]) heartIcon.src = './heart-filled.png';
       else heartIcon.src = './heart.png';
       heartIcon.id = 'heart-icon';
       heartIcon.addEventListener('click', () => {
-        console.log(tab.id, favorites[tab.id], favorites);
         // change heart icon on click
         if (heartIcon.src.includes('heart.png')) {
           heartIcon.src = './heart-filled.png';
@@ -191,7 +181,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (tabs[i].url.includes(input) || tabs[i].title.includes(input)) {
           addTabToList(tabs[i]);
           searchedTabs.push(tabs[i]);
-          console.log(searchedTabs);
         }
       }
 
@@ -268,7 +257,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // main function to run app
     async function runApp() {
       await getFavorites();
-      console.log(favorites);
       addAllTabs(tabs);
     }
 
