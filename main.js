@@ -1,8 +1,14 @@
+console.log('hello testing');
+chrome.runtime.onInstalled.addListener(() => {
+  console.log('Extension installed');
+});
+
 document.addEventListener('DOMContentLoaded', () => {
   // query the current window's tabs, and do things with the tabs
   chrome.tabs.query({ windowId: chrome.windows.WINDOW_ID_CURRENT }, (tabs) => {
-    console.log(tabs);
-    console.log(chrome.storage);
+    console.log('Checking chrome.storage:', chrome.storage);
+    console.log(chrome.storage.local);
+
     // delete one tab
     // chrome.tabs.remove is asynchronous but doesn't return a promise, so is hard to use reliably.
     // so I made it a Promise
@@ -25,9 +31,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const tabListElement = document.getElementById('tab-list');
     let searchedTabs = [];
     let favorites = {};
-    // chrome.storage.local.get({ favorites: {} }, (result) => {
-    //   favorites = result.favorites;
-    // });
+    function getFavorites() {
+      return new Promise((resolve, reject) => {
+        chrome.storage.local.get({ favorites: {} }, (result) => {
+          if (chrome.runtime.lastError) {
+            console.error(
+              'Error reading from storage:',
+              chrome.runtime.lastError
+            );
+          } else {
+            favorites = result.favorites;
+            console.log('Favorites loaded from storage:', result.favorites);
+            resolve();
+          }
+        });
+      });
+    }
 
     // Creating/maintaing tab list
     function addTabToList(tab) {
@@ -41,10 +60,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // favorite
       const heartIcon = document.createElement('img');
+      console.log('is tab id in favorites?', favorites[tab.id]);
       if (favorites[tab.id]) heartIcon.src = './heart-filled.png';
       else heartIcon.src = './heart.png';
       heartIcon.id = 'heart-icon';
       heartIcon.addEventListener('click', () => {
+        console.log(tab.id, favorites[tab.id], favorites);
         // change heart icon on click
         if (heartIcon.src.includes('heart.png')) {
           heartIcon.src = './heart-filled.png';
@@ -53,7 +74,19 @@ document.addEventListener('DOMContentLoaded', () => {
           heartIcon.src = './heart.png';
           delete favorites[tab.id];
         }
-        // chrome.storage.local.set({ favorites: favorites });
+        async function saveFavorites() {
+          await chrome.storage.local.set({ favorites: favorites }, () => {
+            if (chrome.runtime.lastError) {
+              console.error(
+                'Error saving to storage:',
+                chrome.runtime.lastError
+              );
+            } else {
+              console.log('Favorites saved to storage:', favorites);
+            }
+          });
+        }
+        saveFavorites();
         // add tab to favorite object. when pressing delete, check if tab exists in object. if so, don't delete (just return);
       });
 
@@ -100,8 +133,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    addAllTabs(tabs);
-
     // Organize Tabs
     function organizeTabs() {
       tabs.sort((tab1, tab2) => {
@@ -120,7 +151,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Close All Tabs
     function closeAll() {
-      if (Object.keys(favorites).length === 0) chrome.tabs.create({});
+      const favTabsInWindow = tabs.filter((tab) => favorites[tab.id]);
+      if (favTabsInWindow.length === 0) chrome.tabs.create({});
       for (let i = 0; i < tabs.length; i++) {
         deleteTab(tabs[i].id);
       }
@@ -232,5 +264,16 @@ document.addEventListener('DOMContentLoaded', () => {
     document
       .getElementById('main-button-container')
       .insertAdjacentElement('afterend', domainSortButton);
+
+    // main function to run app
+    async function runApp() {
+      await getFavorites();
+      console.log(favorites);
+      addAllTabs(tabs);
+    }
+
+    runApp();
   });
 });
+
+// update list correctly after deleting all
