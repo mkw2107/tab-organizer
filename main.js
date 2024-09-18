@@ -139,12 +139,21 @@ document.addEventListener('DOMContentLoaded', () => {
     organizeButton.addEventListener('click', organizeTabs);
 
     // Close All Tabs
-    function closeAll() {
+    async function closeAll() {
       const favTabsInWindow = tabs.filter((tab) => favorites[tab.id]);
       if (favTabsInWindow.length === 0) chrome.tabs.create({});
+      let promises = [];
       for (let i = 0; i < tabs.length; i++) {
-        deleteTab(tabs[i].id);
+        promises.push(deleteTab(tabs[i].id));
       }
+      await Promise.all(promises);
+      clearList();
+      chrome.tabs.query(
+        { windowId: chrome.windows.WINDOW_ID_CURRENT },
+        (tabs) => {
+          addAllTabs(tabs);
+        }
+      );
     }
     let closeAllButton = document.getElementById('close-all');
     closeAllButton.addEventListener('click', closeAll);
