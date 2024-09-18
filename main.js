@@ -182,6 +182,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Search input
     function searchTabs(input) {
+      domainSort = false;
+      domainSortButton.innerHTML = 'Sort Tab List by Domain';
+
       clearList();
       searchedTabs = [];
 
@@ -210,14 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // else return hostname;
       return hostname.startsWith('www.') ? hostname.slice(4) : hostname;
     }
-    // function that gets all domains (and tab ids associated with it), puts them in an array, sorts them
-    // remember to clearList()
-    // each domain will be pushed to array of domains, then add a key with the domain name to an object with the value being an array where i will push each tab id with the domain
-    // check if domain exists in array. if not, push domain to array, and add new key of domain name to object with value of [tab.id]
-    // if it does exist, push tab.id to array of key domain name in object
-    // will then have object with all tab ids per domain
-    // then, for all keys in object, create a header with the innerhtml of domain name
-    // call addAllTabs passing in tab id array
+
     function sortByDomain() {
       domainSort = true;
       domainSortButton.innerHTML = 'Sort Tab List in Window Order';
