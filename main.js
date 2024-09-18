@@ -40,6 +40,17 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
+    // save favorites to local storage
+    async function saveFavorites() {
+      await chrome.storage.local.set({ favorites: favorites }, () => {
+        if (chrome.runtime.lastError) {
+          console.error('Error saving to storage:', chrome.runtime.lastError);
+        } else {
+          console.log('Favorites saved to storage:', favorites);
+        }
+      });
+    }
+
     // Creating/maintaing tab list
     function addTabToList(tab) {
       // make list item
@@ -63,18 +74,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
           heartIcon.src = './heart.png';
           delete favorites[tab.id];
-        }
-        async function saveFavorites() {
-          await chrome.storage.local.set({ favorites: favorites }, () => {
-            if (chrome.runtime.lastError) {
-              console.error(
-                'Error saving to storage:',
-                chrome.runtime.lastError
-              );
-            } else {
-              console.log('Favorites saved to storage:', favorites);
-            }
-          });
         }
         saveFavorites();
         // add tab to favorite object. when pressing delete, check if tab exists in object. if so, don't delete (just return);
@@ -253,6 +252,15 @@ document.addEventListener('DOMContentLoaded', () => {
     document
       .getElementById('main-button-container')
       .insertAdjacentElement('afterend', domainSortButton);
+
+    // if a tab is closed, remove it from the favorites list
+    chrome.tabs.onRemoved.addListener((tabId) => {
+      if (favorites[tabId]) {
+        delete favorites[tabId];
+        saveFavorites();
+        console.log(favorites);
+      }
+    });
 
     // main function to run app
     async function runApp() {
